@@ -17,7 +17,7 @@ public class CommentController {
 
     private final CommentService service;
 
-    // 🔓 BOTH ADMIN + EMPLOYEE CAN ADD COMMENTS
+    //  BOTH ADMIN + EMPLOYEE CAN ADD COMMENTS
     @PostMapping("/{taskId}/comments")
     @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
     public TaskComment add(
@@ -28,14 +28,14 @@ public class CommentController {
         return service.addComment(taskId, auth.getName(), req.getComment());
     }
 
-    // 🔒 ADMIN ONLY — VIEW ALL COMMENTS
+    //  ADMIN ONLY — VIEW ALL COMMENTS
     @GetMapping("/{taskId}/comments")
     @PreAuthorize("hasRole('ADMIN')")
     public List<TaskComment> adminView(@PathVariable Long taskId) {
         return service.getCommentsForTask(taskId, null, true);
     }
 
-    // 🔒 EMPLOYEE ONLY — VIEW OWN TASK COMMENTS
+    //  EMPLOYEE ONLY — VIEW OWN TASK COMMENTS
     @GetMapping("/my/{taskId}/comments")
     @PreAuthorize("hasRole('EMPLOYEE')")
     public List<TaskComment> employeeView(@PathVariable Long taskId, Authentication auth) {
