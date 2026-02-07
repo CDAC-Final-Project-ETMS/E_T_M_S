@@ -10,7 +10,7 @@ import lombok.Data;
 public class TaskRequest {
     private String title;
     private String description;
-    private LocalDate dueDate;   // ✅ added
-    private Priority priority;  // ✅ added
+    private LocalDate dueDate;   
+    private Priority priority;  
     private Long empId;
 }

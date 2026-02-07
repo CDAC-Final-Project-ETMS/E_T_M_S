@@ -38,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
     Employee emp = repo.findByEmail(request.getEmail())
         .orElseThrow(() -> new RuntimeException("Invalid credentials"));
 
-    // 🔒 BLOCK DEACTIVATED USERS
+    //block deactivated users
     if (emp.getStatus() != Status.ACTIVE) {
       throw new RuntimeException("Account is deactivated");
     }

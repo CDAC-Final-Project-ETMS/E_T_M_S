@@ -23,10 +23,10 @@ public class Task {
   @Enumerated(EnumType.STRING)
   private TaskStatus status;
 
-  private LocalDate dueDate;   // ✅ FIXED
+  private LocalDate dueDate;   
 
   @Enumerated(EnumType.STRING)
-  private Priority priority;  // ✅ FIXED
+  private Priority priority;  
 
   @ManyToOne
   @JoinColumn(name = "assigned_to")

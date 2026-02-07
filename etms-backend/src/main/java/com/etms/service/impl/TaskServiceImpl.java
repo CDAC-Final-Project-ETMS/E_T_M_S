@@ -17,7 +17,7 @@ import com.etms.enums.TaskStatus;
 import com.etms.repository.EmployeeRepository;
 import com.etms.repository.TaskHistoryRepository;
 import com.etms.repository.TaskRepository;
-import com.etms.repository.TaskCommentRepository;   // 🔥 ADDED
+import com.etms.repository.TaskCommentRepository;   
 import com.etms.service.AuditService;
 import com.etms.service.TaskService;
 
@@ -30,7 +30,7 @@ public class TaskServiceImpl implements TaskService {
   private final TaskRepository repo;
   private final EmployeeRepository empRepo;
   private final TaskHistoryRepository historyRepo;
-  private final TaskCommentRepository commentRepo;  // 🔥 ADDED
+  private final TaskCommentRepository commentRepo;  
   private final AuditService auditService;
 
   @Override
@@ -40,7 +40,7 @@ public class TaskServiceImpl implements TaskService {
       throw new RuntimeException("Employee ID is required");
     }
 
-    // 🔒 BLOCK PAST DUE DATES
+    //block past due dates
     if (request.getDueDate() != null &&
         request.getDueDate().isBefore(java.time.LocalDate.now())) {
       throw new RuntimeException("Due date cannot be in the past");
@@ -49,7 +49,7 @@ public class TaskServiceImpl implements TaskService {
     Employee emp = empRepo.findById(request.getEmpId())
         .orElseThrow(() -> new RuntimeException("Employee not found"));
 
-    // 🔒 BLOCK ADMIN ASSIGNMENT
+    //block admin assignment
     if ("ADMIN".equalsIgnoreCase(emp.getRole().getRoleName())) {
       throw new RuntimeException("Task cannot be assigned to admin");
     }
@@ -124,7 +124,6 @@ public class TaskServiceImpl implements TaskService {
     return repo.findByAssignedTo_EmpId(emp.getEmpId());
   }
 
-  // 🔥 FIXED METHOD — FK SAFE
   @Override
   @Transactional
   public void completeTask(Long taskId, String email) {
@@ -139,7 +138,6 @@ public class TaskServiceImpl implements TaskService {
       throw new RuntimeException("You can only complete your own task");
     }
 
-    // 🔥 DELETE COMMENTS FIRST (FK FIX)
     commentRepo.deleteByTask_TaskId(taskId);
 
     TaskHistory history = new TaskHistory();
@@ -165,12 +163,10 @@ public class TaskServiceImpl implements TaskService {
     Task task = repo.findById(taskId)
         .orElseThrow(() -> new RuntimeException("Task not found"));
 
-    // 🔐 Get logged-in admin email from JWT
     String email = SecurityContextHolder.getContext()
         .getAuthentication()
         .getName();
 
-    // 🔥 DELETE COMMENTS FIRST (FK FIX)
     commentRepo.deleteByTask_TaskId(taskId);
 
     TaskHistory history = new TaskHistory();

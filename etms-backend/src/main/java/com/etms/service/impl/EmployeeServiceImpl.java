@@ -86,12 +86,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     Employee currentAdmin = repo.findByEmail(currentEmail)
         .orElseThrow(() -> new RuntimeException("Admin not found"));
 
-    // ❌ Prevent self-deactivation
+    //Prevent self-deactivation for admin
     if (target.getEmpId().equals(currentAdmin.getEmpId())) {
       throw new RuntimeException("You cannot deactivate your own account");
     }
 
-    // ❌ Prevent deactivating ADMIN
+    //Prevent deactivating admin
     if ("ADMIN".equalsIgnoreCase(
             target.getRole().getRoleName())) {
       throw new RuntimeException("You cannot deactivate another admin");

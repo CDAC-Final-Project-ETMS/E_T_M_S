@@ -28,13 +28,13 @@ public class CommentServiceImpl implements CommentService {
         Task task = taskRepo.findById(taskId)
                 .orElseThrow(() -> new RuntimeException("Task not found"));
 
-        // 🔐 EMPLOYEE: can comment only on own task
+        //Employee can comment only on own task
         if ("EMPLOYEE".equalsIgnoreCase(emp.getRole().getRoleName()) &&
             !task.getAssignedTo().getEmpId().equals(emp.getEmpId())) {
             throw new RuntimeException("Not allowed to comment on this task");
         }
 
-        // ✅ ADMIN: can comment on ANY task
+        //Admin can comment on any task
 
         TaskComment c = new TaskComment();
         c.setTask(task);
@@ -55,16 +55,15 @@ public class CommentServiceImpl implements CommentService {
         Task task = taskRepo.findById(taskId)
                 .orElseThrow(() -> new RuntimeException("Task not found"));
 
-        // ✅ ADMIN: see all comments
         if (isAdmin) {
             return commentRepo.findByTask_TaskId(taskId);
         }
 
-        // 👇 EMPLOYEE FLOW
+        
         Employee emp = empRepo.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
 
-        // 🔐 Only view comments for own task
+        // employee only view comments for own task
         if (!task.getAssignedTo().getEmpId().equals(emp.getEmpId())) {
             throw new RuntimeException("Access denied");
         }
